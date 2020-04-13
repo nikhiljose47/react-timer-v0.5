@@ -2,27 +2,24 @@ import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import ReactDOM from "react-dom";
+import * as firebase from 'firebase';
+import Calendar from 'react-calendar';
 
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
+function App(){
+  const list = [1];
+  const listItems = list.map((e)=><div><Clock key={e}/></div>)
+  return(
+    <div>
+      <Clock key={2}/>
+      {listItems}
+      <div>
+        <Calendar
+          value= {new Date()}
+        />
+      </div>
+    </div>
+  );
+}
 
 class Clock extends React.Component {
   constructor(props) {
@@ -32,6 +29,13 @@ class Clock extends React.Component {
 
   componentDidMount() {  // called from setState
     this.timerID = setInterval(() => this.tick(), 1000);
+    //firebase
+    const rootRef = firebase.database().ref().child('test');
+    const ref = rootRef.child('child')
+    ref.on('value',snap=>{
+      console.log("came")
+      console.log(snap.val());
+    })
   }
 
   tick() {
@@ -62,17 +66,4 @@ class Clock extends React.Component {
   }
 }
 
-
-
-function App(){
-  const list = [1,2,3];
-  const listItems = list.map((e)=><div><Clock key={e}/></div>)
-  return(
-    <div>
-      <Clock key={7}/>
-      <Clock />
-      {listItems}
-    </div>
-  );
-}
 export default App;
